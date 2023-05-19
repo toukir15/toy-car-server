@@ -41,7 +41,21 @@ async function run() {
             if (req?.query?.category) {
                 query = { category: req.query.category }
             }
+            if (req?.query?.email) {
+                query = { seller_email: req.query.email }
+            }
+            console.log(query);
             const result = await carsCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        // app.get("/cars", async)
+
+
+        app.get('/cars/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await carsCollection.findOne(query)
             res.send(result)
         })
 
@@ -51,14 +65,6 @@ async function run() {
             const result = await carsCollection.insertOne(toyInfo)
             res.send(result)
         })
-
-        app.get('/cars/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) }
-            const result = await carsCollection.findOne(query)
-            res.send(result)
-        })
-
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
