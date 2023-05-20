@@ -58,9 +58,43 @@ async function run() {
 
         app.post('/cars', async (req, res) => {
             const toyInfo = req.body
-            console.log(toyInfo);
+            // console.log(toyInfo);
             const result = await carsCollection.insertOne(toyInfo)
-            res.send(result)
+            console.log(result);
+            const data = {
+                ...toyInfo, _id: result.insertedId
+            }
+            res.send({ ...result, data })
+
+        })
+
+        app.patch('/cars/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const options = { upsert: true };
+            const carInfo = req.body;
+            // console.log(carInfo);
+            const updateData = {
+                img: carInfo.img,
+                name: carInfo.name,
+                seller_name: carInfo.seller_name,
+                seller_email: carInfo.seller_name,
+                category: carInfo.seller_name,
+                price: carInfo.price,
+                rating: carInfo.rating,
+                available_quantity: carInfo.available_quantity,
+                description: carInfo.description,
+
+            }
+            const updatedCar = {
+                $set: updateData
+            };
+
+
+            const result = await carsCollection.updateOne(query, updatedCar, options)
+            const updateDataResult = { _id: id, ...updateData }
+            console.log(result);
+            res.send({ ...result, data: updateDataResult })
         })
 
         app.delete('/cars/:id', async (req, res) => {
