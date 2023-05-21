@@ -16,7 +16,7 @@ app.get('/', (req, res) => {
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const uri = "mongodb+srv://toyCars:admin123@cluster0.dgqtjig.mongodb.net/?retryWrites=true&w=majority";
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.dgqtjig.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -30,7 +30,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
         const carsCollection = client.db("toyCar").collection("cars");
         // console.log(carsCollection);
@@ -49,7 +49,6 @@ async function run() {
             }
             console.log(query);
             const result = await carsCollection.find(query).toArray()
-            // console.log(result);
             res.send(result)
         })
 
@@ -62,7 +61,6 @@ async function run() {
 
         app.post('/cars', async (req, res) => {
             const toyInfo = req.body
-            // console.log(toyInfo);
             const result = await carsCollection.insertOne(toyInfo)
             console.log(result);
             const data = {
@@ -77,7 +75,6 @@ async function run() {
             const query = { _id: new ObjectId(id) }
             const options = { upsert: true };
             const carInfo = req.body;
-            // console.log(carInfo);
             const updateData = {
                 img: carInfo.img,
                 name: carInfo.name,
