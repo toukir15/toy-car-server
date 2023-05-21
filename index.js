@@ -44,8 +44,12 @@ async function run() {
             if (req?.query?.email) {
                 query = { seller_email: req.query.email }
             }
+            if (req?.query?.saleStatus) {
+                query = { sale_status: req?.query?.saleStatus }
+            }
             console.log(query);
             const result = await carsCollection.find(query).toArray()
+            // console.log(result);
             res.send(result)
         })
 
