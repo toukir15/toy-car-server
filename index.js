@@ -33,7 +33,6 @@ async function run() {
         // await client.connect();
 
         const carsCollection = client.db("toyCar").collection("cars");
-        // console.log(carsCollection);
 
         // cars 
         app.get('/cars', async (req, res) => {
@@ -47,7 +46,6 @@ async function run() {
             if (req?.query?.saleStatus) {
                 query = { sale_status: req?.query?.saleStatus }
             }
-            console.log(query);
             const result = await carsCollection.find(query).toArray()
             res.send(result)
         })
@@ -62,7 +60,6 @@ async function run() {
         app.post('/cars', async (req, res) => {
             const toyInfo = req.body
             const result = await carsCollection.insertOne(toyInfo)
-            console.log(result);
             const data = {
                 ...toyInfo, _id: result.insertedId
             }
@@ -94,7 +91,6 @@ async function run() {
 
             const result = await carsCollection.updateOne(query, updatedCar, options)
             const updateDataResult = { _id: id, ...updateData }
-            console.log(result);
             res.send({ ...result, data: updateDataResult })
         })
 
